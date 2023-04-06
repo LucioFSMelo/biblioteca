@@ -9,7 +9,8 @@ def login(requst):
 
 
 def cadastro(request):
-    return render(request, 'cadastro.html')
+    status = request.GET.get('status')
+    return render(request, 'cadastro.html', {'status': status})
 
 def valida_cadastro(request):
     nome = request.POST.get('nome')
@@ -18,13 +19,13 @@ def valida_cadastro(request):
 
     usuario = Usuario.objects.filter(email = email)
 
-    if len(nome.strip()) == 0 or len(email.strip()) == 0:
+    if len(nome.strip()) == 0 or len(email.strip()) == 0: #Nome e email não podem ser nulos
         return redirect('/auth/cadastro/?status=1')
     
-    if len(senha) < 8:
+    if len(senha) < 8:  # A senha tem que ter pelo menos 8 dígitos.
         return redirect('/auth/cadastro/?status=2')
     
-    if len(usuario) > 0:
+    if len(usuario) > 0:  # Se o usuário já estiver cadastrado, redirecione, se não, cadastrar o usuário.
         return redirect('/auth/cadastro/?status=3')
     
     try:
